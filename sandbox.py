@@ -59,7 +59,6 @@ def appStarted(app):
     app.fpsmeter = fpsmeter.FPSmeter()
     graphicsparams(app)
 
-
 def graphicsparams(app):
     app.image1 = app.loadImage(r"Image/Egg.png")
     app.image1_scale = app.scaleImage(app.image1, 2/9)
@@ -100,19 +99,20 @@ def changeSlice(app):
 #     p4 = shapes.Point(200,100)
 #     return p1,p2,p3,p4
 
-def checkint(app):
-    p1,p2,p3,p4 = checkcut(app)
-    for i in range(len(app.cursorQueue)-1):
-        q1 = shapes.Point(*app.cursorQueue[i])
-        q2 = shapes.Point(*app.cursorQueue[i+1])
-        if shapes.doIntersect(p1,p2,q1,q2):
-            print('YAY')
-        if shapes.doIntersect(p3,p4,q1,q2):
-            print('YAY')
-        if shapes.doIntersect(p2,p3,q1,q2):
-            print('YAY')
-        if shapes.doIntersect(p3,p4,q1,q2):
-            print('YAY')
+# def checkint(app):
+#     p1,p2,p3,p4 = checkcut(app)
+#     for i in range(len(app.cursorQueue)-1):
+#         q1 = shapes.Point(*app.cursorQueue[i])
+#         q2 = shapes.Point(*app.cursorQueue[i+1])
+#         if shapes.doIntersect(p1,p2,q1,q2):
+#             print('YAY')
+#         if shapes.doIntersect(p3,p4,q1,q2):
+#             print('YAY')
+#         if shapes.doIntersect(p2,p3,q1,q2):
+#             print('YAY')
+#         if shapes.doIntersect(p3,p4,q1,q2):
+#             print('YAY')
+
 # --------------------
 # CALIBRATION MODE
 # --------------------
@@ -194,7 +194,7 @@ def timerFired(app):
     changeSlice(app)
     removeEgg(app)
 
-    checkint(app)
+    # checkint(app)
     calibrationMode_timerFired(app)
 
 
