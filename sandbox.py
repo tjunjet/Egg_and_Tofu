@@ -92,16 +92,16 @@ def changeSlice(app):
                 egg.sliced(p1, p2)
 
 
-def drawbox(app,canvas):
-    canvas.create_rectangle(100,100,200,200)
+# def drawbox(app,canvas):
+#     canvas.create_rectangle(100,100,200,200)
 
 
-def checkcut(app):
-    p1 = shapes.Point(100,100)
-    p2 = shapes.Point(100,200)
-    p3 = shapes.Point(200,200)
-    p4 = shapes.Point(200,100)
-    return p1,p2,p3,p4
+# def checkcut(app):
+#     p1 = shapes.Point(100,100)
+#     p2 = shapes.Point(100,200)
+#     p3 = shapes.Point(200,200)
+#     p4 = shapes.Point(200,100)
+#     return p1,p2,p3,p4
 
 def checkint(app):
     p1,p2,p3,p4 = checkcut(app)
@@ -145,7 +145,7 @@ def createEgg(app):
 
 def moveEgg(app):
     for egg in app.eggs:
-        egg.y += 1
+        egg.y += 100
 
 
 def removeEgg(app):
@@ -168,7 +168,7 @@ def drawTofu(app, canvas):
 def redrawAll(app, canvas):
     drawBackground(app, canvas)
     drawEgg(app, canvas)
-    drawbox(app, canvas)
+    #drawbox(app, canvas)
     calibrationMode_redrawAll(app, canvas)
 
 
