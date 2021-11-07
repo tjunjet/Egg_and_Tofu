@@ -3,15 +3,17 @@ HEIGHT = 1000
 CURSOR_LIST_LENGTH = 10
 CURSOR_RA_NUM = 5
 CALIBRATION_RECTANGLE_TEMP = [0, 640, 0, 480] # TEMP
-EGG_SPEED = 30
-TOFU_SPEED = 50
-STARTING_LIVES = 10
+EGG_SPEED = 5
+TOFU_SPEED = 7
+STARTING_LIVES = float("inf")
+G = 0.15
+IS_VERBOSE = False
 
 from cmu_112_graphics import *
 import videoInput as vi
 import fpsmeter
 import cv2 as cv
-import statistics, bpm_detection, shapes, time
+import statistics, bpm_detection, shapes, time, random
 import sound
 import pygame
 
@@ -68,20 +70,22 @@ def changeSlice(app):
                 tofu.sliced(p1,p2)
 
 def createEgg(app):
-    egg1 = shapes.RedEgg('Image/Egg.png', app.image1_width, app.image1_height)
+    egg1 = shapes.Egg('Image/Egg.png', app.image1_width, app.image1_height)
     app.eggs.append(egg1)
 
 def createTofu(app):
-    tofu1 = shapes.RedEgg('Image/Egg.png', app.image2_width, app.image2_height)
+    tofu1 = shapes.Tofu('Image/Egg.png', app.image2_width, app.image2_height)
     app.tofus.append(tofu1)
 
 def moveTofu(app):
     for tofu in app.tofus:
-        tofu.y += TOFU_SPEED
+        tofu.y += TOFU_SPEED * (1 + tofu.counter * G)
+        tofu.counter += 1
 
 def moveEgg(app):
     for egg in app.eggs:
-        egg.y += EGG_SPEED
+        egg.y += EGG_SPEED * (1 + egg.counter * G)
+        egg.counter += 1
 
 def moveBrokenEgg(app):
     for broken in app.brokeneggs:
@@ -96,10 +100,13 @@ def removeEgg(app):
             app.brokeneggs.append([app.eggs[i].x, app.eggs[i].y])
             app.eggs.pop(i)
             app.lives -= 1
+            app.combo = 0
         elif app.eggs[i].slice == True:
             app.score += app.eggs[i].points
             app.brokeneggs.append([app.eggs[i].x, app.eggs[i].y])
             app.eggs.pop(i)
+            app.hits += 1
+            app.combo += 1
         else:
             i += 1
 
@@ -109,9 +116,12 @@ def removeTofu(app):
         if app.tofus[i].y >= app.height:
             app.tofus.pop(i)
             app.lives -= 1
+            app.combo = 0
         elif app.tofus[i].slice == True:
             app.score += app.tofus[i].points
             app.tofus.pop(i)
+            app.hits += 1
+            app.combo += 1
         else:
             i += 1
 
@@ -138,7 +148,12 @@ def appStarted(app):
     app.score = 0
     app.lives = STARTING_LIVES
     app.isGameOver = False
+    app.counter = 0
+    app.hits = 0
+    app.percentage = 0
+    app.isFlashing = False
     graphicsparams(app)
+    soundParams(app)
 
 def graphicsparams(app):
     ###########################################################
@@ -167,6 +182,7 @@ def graphicsparams(app):
     app.timerDelay = 1
     app.timeElapsed = 0
     app.startTime = time.time()
+    app.combo = 0
 
     app.eggs = []
     #list of tuples containing x,y coordinate of broken egg
@@ -177,6 +193,7 @@ def graphicsparams(app):
 def soundParams(app):
     pygame.mixer.init()
     app.sound = sound.Sound("Music/Forever Bound - Stereo Madness.wav")
+    app.sound.start()
 
 # --------------------
 # GAME MODE
@@ -189,7 +206,8 @@ def gameMode_timerFired(app):
         return
     updateCursor(app)
 
-    print(app.cursorCount, app.cursorQueue)
+    if IS_VERBOSE:
+        print(app.cursorCount, app.cursorQueue)
     app.fpsmeter.addFrame()
 
     newTime = time.time()
@@ -197,15 +215,25 @@ def gameMode_timerFired(app):
     # app.timerDelay
     # app.timeElapsed += app.timerDelay
     if timePassed > app.period:
-        createEgg(app)
-        createTofu(app)
+        choice = random.randint(1, 6)
+        if choice == 1:
+            createTofu(app)
+        else:
+            createEgg(app)
+        app.counter += 1
         app.startTime = newTime
+        app.isFlashing = True
+    else:
+        app.isFlashing = False
+    app.percentage = round(100 * app.hits/app.counter)
     moveEgg(app)
     moveTofu(app)
     changeSlice(app)
     removeEgg(app)
     removeTofu(app)
     moveBrokenEgg(app)
+    if app.sound.isPlaying() == False:
+        app.isGameOver = True
 
 def gameMode_redrawAll(app, canvas):
     if app.isGameOver == True:
@@ -219,7 +247,7 @@ def gameMode_redrawAll(app, canvas):
     for i in range(len(app.cursorQueue) - 1):
         canvas.create_line(*app.cursorQueue[i], *app.cursorQueue[i + 1], width = 10)
     canvas.create_text(app.width//2, app.height * 0.75, text = f"FPS: {round(app.fpsmeter.getFPS())}")
-    canvas.create_text(app.width//2, app.height//10, font = "Arial 20", text = f"SCORE: {app.score}     LIVES: {app.lives}")
+    canvas.create_text(app.width//2, app.height//10, font = "Arial 20", text = f"SCORE: {app.score}     COMBO: {app.combo}     HITS: {app.percentage}%")
 
 # --------------------
 # DRAWING
@@ -228,9 +256,13 @@ def gameMode_redrawAll(app, canvas):
 def drawGameOver(app, canvas):
     canvas.create_rectangle(0, 0, app.width, app.height, fill = "red")
     canvas.create_text(app.width//2, app.height//2, text = "Game Over", font = "Arial 50", fill = "yellow")
+    canvas.create_text(app.width//2, app.height * 0.75, text = f"Percentage hit: {round(100 * app.hits/app.counter)}%", font = "Arial 60")
 
 def drawBackground(app, canvas):
-    canvas.create_image(app.width/2, app.height/2, image=ImageTk.PhotoImage(app.background))
+    if app.isFlashing == False:
+        canvas.create_image(app.width/2, app.height/2, image=ImageTk.PhotoImage(app.background))
+    else:
+        canvas.create_rectangle(0, 0, app.width, app.height, fill = "white")
 
 def drawBrokenEgg(app,canvas):
     if app.brokeneggs != []:
@@ -252,8 +284,10 @@ def drawTofu(app, canvas):
 # --------------------
 
 def keyPressed(app, event):
+    print(event.key)
     if (event.key == 's'):
-        if app.sound.isPlaying(): app.sound.stop()
-        else: app.sound.start()
+        app.sound.start()
+        print("YAY")
+
 
 runApp(width = WIDTH, height = HEIGHT)

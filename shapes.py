@@ -43,7 +43,7 @@ class Tofu(object):
         self.filename = filename
         self.width = width
         self.height = height
-        self.points = 20
+        self.points = 50
         self.slice = False
         self.x = random.randint(100, 900)
         self.y = 0
