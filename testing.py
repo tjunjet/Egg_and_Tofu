@@ -1,6 +1,8 @@
 from cmu_112_graphics import *
 import bpm_detection
 import shapes
+import time 
+
 #from
 # http://clipart-library.com/free/egg-png-transparent.html
 # https://genshin-impact.fandom.com/wiki/Almond_Tofu
@@ -12,10 +14,12 @@ def appStarted(app):
     app.image2 = app.loadImage(r"Image/Tofu.png")
     app.filename = "Music/Forever Bound - Stereo Madness.wav"
     app.bpm = getBPM(app, app.filename)
+    # Time interval between successive item drops
     app.timerDelay = int((60 / app.bpm) * 1000)
     app.timeElapsed = 0
     app.eggs = []
     app.tofus = []
+    app.counter = 0
 
 def createEgg(app):
     egg1 = shapes.RedEgg('Image/Egg.png')
@@ -58,6 +62,9 @@ def getBPM(app, filename):
     return bpm_detection.main(app.filename)
 
 def timerFired(app):
+    # newTime = time.time()
+    # timePassed = newTime - app.startTime
+    app.timerDelay
     app.timeElapsed += app.timerDelay
     createEgg(app)
     moveEgg(app)
