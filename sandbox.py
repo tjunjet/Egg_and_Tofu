@@ -80,6 +80,15 @@ def graphicsparams(app):
     app.eggs = []
     app.tofus = []
     app.counter = 0
+    app.cursorPoints = []
+
+
+def changeSlice(app):
+    p1 = shapes.Point(*app.cursorQueue[-2])
+    p2 = shapes.Point(*app.cursorQueue[-1])
+    for egg in app.egg:
+        egg.sliced(p1,p2)
+
 
 # --------------------
 # CALIBRATION MODE
@@ -153,6 +162,7 @@ def timerFired(app):
         createEgg(app)
         moveEgg(app)
         app.startTime = newTime
+    changeSlice(app)
     removeEgg(app)
     calibrationMode_timerFired(app)
 
