@@ -30,6 +30,7 @@ import matplotlib.pyplot as plt
 import numpy
 import pywt
 from scipy import signal
+import os
 
 def read_wav(filename):
     # open file, get metadata for audio
@@ -125,13 +126,13 @@ def bpm_detector(data, fs):
 
     peak_ndx_adjusted = peak_ndx[0] + min_ndx
     bpm = 60.0 / peak_ndx_adjusted * (fs / max_decimation)
-    print(bpm)
+    # print(bpm)
     return bpm, correl
 
 
-if __name__ == "__main__":
+def main(filename):
     parser = argparse.ArgumentParser(description="Process .wav file to determine the Beats Per Minute.")
-    parser.add_argument("--filename", required=True, help=".wav file for processing")
+    # parser.add_argument("--filename", required=True, help=".wav file for processing")
     parser.add_argument(
         "--window",
         type=float,
@@ -140,7 +141,7 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    samps, fs = read_wav(args.filename)
+    samps, fs = read_wav(filename)
     data = []
     correl = []
     bpm = 0
@@ -173,9 +174,11 @@ if __name__ == "__main__":
         n = n + 1
 
     bpm = numpy.median(bpms)
-    print("Completed!  Estimated Beats Per Minute:", bpm)
+    #print("Completed!  Estimated Beats Per Minute:", bpm)
 
-    n = range(0, len(correl))
-    plt.plot(n, abs(correl))
-    plt.show(block=True)
+    # n = range(0, len(correl))
+    # plt.plot(n, abs(correl))
+    # plt.show(block=True)
+
+    return bpm
 
