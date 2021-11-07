@@ -3,8 +3,8 @@ HEIGHT = 1000
 CURSOR_LIST_LENGTH = 10
 CURSOR_RA_NUM = 5
 CALIBRATION_RECTANGLE_TEMP = [0, 640, 0, 480] # TEMP
-EGG_SPEED = 8
-TOFU_SPEED = 8
+EGG_SPEED = 30
+TOFU_SPEED = 50
 STARTING_LIVES = 10
 
 from cmu_112_graphics import *
@@ -146,7 +146,7 @@ def graphicsparams(app):
     ###########################################################
     ###########################################################
     app.image2 = app.loadImage(r"Image/Tofu.png")
-    app.image2_scale = app.scaleImage(app.image2, 4/9)
+    app.image2_scale = app.scaleImage(app.image2, 3/9)
     app.image2_width, app.image2_height = app.image2_scale.size
     ###########################################################
     ###########################################################
@@ -177,6 +177,8 @@ def graphicsparams(app):
 # --------------------
 
 def gameMode_timerFired(app):
+    if app.lives < 0:
+        app.isGameOver = True
     if app.isGameOver == True:
         return
     updateCursor(app)
@@ -201,7 +203,7 @@ def gameMode_timerFired(app):
 
 def gameMode_redrawAll(app, canvas):
     if app.isGameOver == True:
-        drawGameOver()
+        drawGameOver(app, canvas)
         return
     canvas.create_text(app.width//2, app.height//2, text = "Calibration Mode")
     drawBackground(app, canvas)
