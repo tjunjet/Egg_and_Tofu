@@ -266,8 +266,11 @@ def gameMode_redrawAll(app, canvas):
     drawBrokenEgg(app,canvas)
     drawBrokenTofu(app,canvas)
     drawInstructions(app, canvas)
+    r = 10
+    if len(app.cursorQueue) > 0:
+        canvas.create_oval(app.cursorQueue[-1][0] - r, app.cursorQueue[-1][1] - r, app.cursorQueue[-1][0] + r, app.cursorQueue[-1][1] + r, width = 5, fill = "white")
     for i in range(len(app.cursorQueue) - 1):
-        canvas.create_line(*app.cursorQueue[i], *app.cursorQueue[i + 1], width = 10)
+        canvas.create_line(*app.cursorQueue[i], *app.cursorQueue[i + 1], width = 5)
     canvas.create_text(app.width//2, app.height * 0.75, text = f"FPS: {round(app.fpsmeter.getFPS())}")
     canvas.create_text(app.width//2, app.height//10, font = "Arial 20", text = f"SCORE: {app.score}     COMBO: {app.combo}     HITS: {app.percentage}%")
 
