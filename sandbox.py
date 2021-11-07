@@ -91,12 +91,13 @@ def removeEgg(app):
     i = 0
     while i < len(app.eggs):
         if app.eggs[i].y >= app.height:
+            app.brokeneggs.append([app.eggs[i].x, app.eggs[i].y])
             app.eggs.pop(i)
             app.lives -= 1
-            app.brokeneggs.append((app.eggs[i].x, app.eggs[i].y))
         elif app.eggs[i].slice == True:
-            app.eggs.pop(i)
             app.score += app.eggs[i].points
+            app.brokeneggs.append([app.eggs[i].x, app.eggs[i].y])
+            app.eggs.pop(i)
         else:
             i += 1
 
@@ -107,8 +108,8 @@ def removeTofu(app):
             app.tofus.pop(i)
             app.lives -= 1
         elif app.tofus[i].slice == True:
-            app.tofus.pop(i)
             app.score += app.tofus[i].points
+            app.tofus.pop(i)
         else:
             i += 1
 
@@ -134,6 +135,7 @@ def appStarted(app):
     app.fpsmeter = fpsmeter.FPSmeter()
     app.score = 0
     app.lives = STARTING_LIVES
+    app.isGameOver = False
     graphicsparams(app)
 
 def graphicsparams(app):
@@ -153,7 +155,7 @@ def graphicsparams(app):
     ###########################################################
     #https://www.pngkey.com/maxpic/u2e6y3i1q8r5u2e6/
     #broken egg
-    app.brokenegg = app.loadImage(r"Image/brokenegg")
+    app.brokenegg = app.loadImage(r"Image/brokenegg.png")
     app.brokenegg_scale = app.scaleImage(app.brokenegg, 2/9)
     ###########################################################
     app.filename = "Music/Forever Bound - Stereo Madness.wav"
@@ -175,6 +177,8 @@ def graphicsparams(app):
 # --------------------
 
 def gameMode_timerFired(app):
+    if app.isGameOver == True:
+        return
     updateCursor(app)
 
     print(app.cursorCount, app.cursorQueue)
@@ -196,6 +200,9 @@ def gameMode_timerFired(app):
     moveBrokenEgg(app)
 
 def gameMode_redrawAll(app, canvas):
+    if app.isGameOver == True:
+        drawGameOver()
+        return
     canvas.create_text(app.width//2, app.height//2, text = "Calibration Mode")
     drawBackground(app, canvas)
     drawEgg(app, canvas)
@@ -210,6 +217,10 @@ def gameMode_redrawAll(app, canvas):
 # DRAWING
 # --------------------
 
+def drawGameOver(app, canvas):
+    canvas.create_rectangle(0, 0, app.width, app.height, fill = "red")
+    canvas.create_text(app.width//2, app.height//2, text = "Game Over", font = "Arial 50", fill = "yellow")
+
 def drawBackground(app, canvas):
     canvas.create_image(app.width/2, app.height/2, image=ImageTk.PhotoImage(app.background))
 
@@ -217,6 +228,7 @@ def drawBrokenEgg(app,canvas):
     if app.brokeneggs != []:
         for x, y in app.brokeneggs:
             canvas.create_image(x, y, image=ImageTk.PhotoImage(app.brokenegg_scale))
+
 def drawEgg(app, canvas):
     if app.eggs != []:
         for egg in app.eggs:
