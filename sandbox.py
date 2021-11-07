@@ -81,12 +81,19 @@ def moveEgg(app):
     for egg in app.eggs:
         egg.y += EGG_SPEED
 
+def moveBrokenEgg(app):
+    for broken in app.brokeneggs:
+        broken[1] += EGG_SPEED*5
+        if broken[1] >= app.height:
+            app.brokeneggs.remove(broken)
+
 def removeEgg(app):
     i = 0
     while i < len(app.eggs):
         if app.eggs[i].y >= app.height:
             app.eggs.pop(i)
             app.lives -= 1
+            app.brokeneggs.append((app.eggs[i].x, app.eggs[i].y))
         elif app.eggs[i].slice == True:
             app.eggs.pop(i)
             app.score += app.eggs[i].points
@@ -144,6 +151,11 @@ def graphicsparams(app):
     #https://www.deviantart.com/jaywlng/art/Tofu-301528003
     app.background = app.loadImage(r"Image/Background.png")
     ###########################################################
+    #https://www.pngkey.com/maxpic/u2e6y3i1q8r5u2e6/
+    #broken egg
+    app.brokenegg = app.loadImage(r"Image/brokenegg")
+    app.brokenegg_scale = app.scaleImage(app.brokenegg, 2/9)
+    ###########################################################
     app.filename = "Music/Forever Bound - Stereo Madness.wav"
     app.bpm = getBPM(app, app.filename)
     # Time interval between successive item drops
@@ -153,6 +165,8 @@ def graphicsparams(app):
     app.startTime = time.time()
 
     app.eggs = []
+    #list of tuples containing x,y coordinate of broken egg
+    app.brokeneggs = []
     app.tofus = []
     app.counter = 0
 
@@ -179,12 +193,14 @@ def gameMode_timerFired(app):
     changeSlice(app)
     removeEgg(app)
     removeTofu(app)
+    moveBrokenEgg(app)
 
 def gameMode_redrawAll(app, canvas):
     canvas.create_text(app.width//2, app.height//2, text = "Calibration Mode")
     drawBackground(app, canvas)
     drawEgg(app, canvas)
     drawTofu(app, canvas)
+    drawBrokenEgg(app,canvas)
     for i in range(len(app.cursorQueue) - 1):
         canvas.create_line(*app.cursorQueue[i], *app.cursorQueue[i + 1], width = 10)
     canvas.create_text(app.width//2, app.height * 0.75, text = f"FPS: {round(app.fpsmeter.getFPS())}")
@@ -197,6 +213,10 @@ def gameMode_redrawAll(app, canvas):
 def drawBackground(app, canvas):
     canvas.create_image(app.width/2, app.height/2, image=ImageTk.PhotoImage(app.background))
 
+def drawBrokenEgg(app,canvas):
+    if app.brokeneggs != []:
+        for x, y in app.brokeneggs:
+            canvas.create_image(x, y, image=ImageTk.PhotoImage(app.brokenegg_scale))
 def drawEgg(app, canvas):
     if app.eggs != []:
         for egg in app.eggs:
