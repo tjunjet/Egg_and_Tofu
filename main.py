@@ -14,6 +14,8 @@ import statistics
 def updateCursor(app):
     # Get data from videoInput
     inputData = vi.getPoint(app.cap)
+    if inputData == None:
+        return
     cursorNew = convertPoint(app, inputData[0], inputData[1])
     # app.cursurQueueRaw stores a queue of the CURSOR_RA_NUM most recent points
     app.cursorQueueRaw.append(cursorNew)
