@@ -162,8 +162,6 @@ def appStarted(app):
     app.hits = 0
     app.percentage = 0
     app.isFlashing = False
-
-
     soundParams(app)
     graphicsparams(app)
     
@@ -212,8 +210,8 @@ def returninput(app):
             Enter 0 or 1 or 2 to choose your song:
 
             0: Stereo Madness
-            1: Moonlight Sonata
-            2: Nocturne
+            1: Moonlight Sonata (1st Movement)
+            2: Nocturne op.9 No.2
 
             ''')
             x = int(app.userinput)
