@@ -224,12 +224,6 @@ def returninput(app):
             continue
 
 
-# def returninput(app):
-#     while checkLegalInput(app.userinput) == False:
-
-#     else:
-#         return int(app.userinput)
-
 def soundParams(app):
     app.songs = {
     #from https://www.youtube.com/watch?v=JhKyKEDxo8Q
