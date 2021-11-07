@@ -3,16 +3,17 @@ HEIGHT = 1000
 CURSOR_LIST_LENGTH = 10
 CURSOR_RA_NUM = 5
 CALIBRATION_RECTANGLE_TEMP = [0, 640, 0, 480] # TEMP
-EGG_SPEED = 6
-TOFU_SPEED = 8
-STARTING_LIVES = 1000
-G = 0.15
+EGG_SPEED = 30
+TOFU_SPEED = 50
+STARTING_LIVES = 10
 
 from cmu_112_graphics import *
 import videoInput as vi
 import fpsmeter
 import cv2 as cv
 import statistics, bpm_detection, shapes, time
+import sound
+import pygame
 
 # --------------------
 # OPENCV FUNCTIONS
@@ -67,22 +68,20 @@ def changeSlice(app):
                 tofu.sliced(p1,p2)
 
 def createEgg(app):
-    egg1 = shapes.Egg('Image/Egg.png', app.image1_width, app.image1_height)
+    egg1 = shapes.RedEgg('Image/Egg.png', app.image1_width, app.image1_height)
     app.eggs.append(egg1)
 
 def createTofu(app):
-    tofu1 = shapes.Tofu('Image/Egg.png', app.image2_width, app.image2_height)
+    tofu1 = shapes.RedEgg('Image/Egg.png', app.image2_width, app.image2_height)
     app.tofus.append(tofu1)
 
 def moveTofu(app):
     for tofu in app.tofus:
-        tofu.y += TOFU_SPEED * (1 + tofu.counter * G)
-        tofu.counter += 1
+        tofu.y += TOFU_SPEED
 
 def moveEgg(app):
     for egg in app.eggs:
-        egg.y += EGG_SPEED * (1 + egg.counter * G)
-        egg.counter += 1
+        egg.y += EGG_SPEED
 
 def moveBrokenEgg(app):
     for broken in app.brokeneggs:
@@ -175,6 +174,10 @@ def graphicsparams(app):
     app.tofus = []
     app.counter = 0
 
+def soundParams(app):
+    pygame.mixer.init()
+    app.sound = sound.Sound("Music/Forever Bound - Stereo Madness.wav")
+
 # --------------------
 # GAME MODE
 # --------------------
@@ -244,5 +247,13 @@ def drawTofu(app, canvas):
         for tofu in app.tofus:
             canvas.create_image(tofu.x, tofu.y, image=ImageTk.PhotoImage(app.image2_scale))
 
-runApp(width = WIDTH, height = HEIGHT)
+# --------------------
+# CONTROLLER
+# --------------------
 
+def keyPressed(app, event):
+    if (event.key == 's'):
+        if app.sound.isPlaying(): app.sound.stop()
+        else: app.sound.start()
+
+runApp(width = WIDTH, height = HEIGHT)
