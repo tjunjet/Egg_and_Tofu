@@ -55,9 +55,9 @@ def appStarted(app):
     app.cursorQueueRaw = []
     app.cursorCount = 0
     app.cap = cv.VideoCapture(0)
-    app.timerDelay = 10
     app.fpsmeter = fpsmeter.FPSmeter()
     graphicsparams(app)
+
 
 def graphicsparams(app):
     app.image1 = app.loadImage(r"Image/Egg.png")
@@ -79,15 +79,9 @@ def graphicsparams(app):
     app.counter = 0
 
 
-def changeSlice(app):
-    if len(app.cursorQueue) > 1:
-        for i in range(len(app.cursorQueue)-1):
-            p1 = shapes.Point(*app.cursorQueue[i])
-            p2 = shapes.Point(*app.cursorQueue[i+1])
-            for egg in app.eggs:
-                egg.sliced(p1, p2)
 
 
+#######################################
 # def drawbox(app,canvas):
 #     canvas.create_rectangle(100,100,200,200)
 
@@ -112,6 +106,8 @@ def changeSlice(app):
 #             print('YAY')
 #         if shapes.doIntersect(p3,p4,q1,q2):
 #             print('YAY')
+##############################################
+
 
 # --------------------
 # CALIBRATION MODE
@@ -134,6 +130,14 @@ def calibrationMode_redrawAll(app, canvas):
 # GAME MODE
 # --------------------
 
+def changeSlice(app):
+    if len(app.cursorQueue) > 1:
+        for i in range(len(app.cursorQueue)-1):
+            p1 = shapes.Point(*app.cursorQueue[i])
+            p2 = shapes.Point(*app.cursorQueue[i+1])
+            for egg in app.eggs:
+                egg.sliced(p1, p2)
+
 def createEgg(app):
     pass
     egg1 = shapes.RedEgg('Image/Egg.png', app.image1_width, app.image1_height)
@@ -142,7 +146,7 @@ def createEgg(app):
 
 def moveEgg(app):
     for egg in app.eggs:
-        egg.y += 100
+        egg.y += 1
 
 
 def removeEgg(app):
@@ -169,16 +173,6 @@ def redrawAll(app, canvas):
     calibrationMode_redrawAll(app, canvas)
 
 
-
-# Controller
-
-#def addEgg(app):
-    # x = app.width/2
-    # y = app.height/2
-    # if len(app.eggs) == 0:
-    #     app.eggs.append((x,y))
-
-
 def getBPM(app, filename):
     return bpm_detection.main(app.filename)
 
@@ -189,12 +183,12 @@ def timerFired(app):
     # app.timeElapsed += app.timerDelay
     if timePassed > app.period:
         createEgg(app)
-        moveEgg(app)
         app.startTime = newTime
+    moveEgg(app)
     changeSlice(app)
     removeEgg(app)
 
-    # checkint(app)
+    #checkint(app)
     calibrationMode_timerFired(app)
 
 
