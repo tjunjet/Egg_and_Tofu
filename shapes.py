@@ -16,6 +16,7 @@ class Egg(object):
         self.y = 0
         self.boxRadiusWidth = self.width//2
         self.boxRadiusLength = self.height//2
+        self.counter = 0
 
     # Check if egg is sliced
     #x0 and y0 are classes of points on the point class from opencv
@@ -35,29 +36,7 @@ class Egg(object):
         if doIntersect(top_right, bot_right, x0, y0):
             self.slice = True
         if doIntersect(bot_left, bot_right, x0, y0):
-            self.slice = True    
-
-
-class RedEgg(Egg):
-    def __init__(self, filename, width, height):
-        super().__init__(filename, width, height)
-        self.weight = 10
-        self.droptime = 0
-        self.speed = 0
-
-class BlueEgg(Egg):
-    def __init__(self, filename):
-        super().__init__(filename)
-        self.weight = 20
-        self.droptime = 0
-        self.speed = 0
-
-class GreenEgg(Egg):
-    def __init__(self, filename):
-        super().__init__(filename)
-        self.weight = 30
-        self.droptime = 0
-        self.speed = 0
+            self.slice = True
 
 class Tofu(object):
     def __init__(self, filename, width, height):
@@ -70,6 +49,7 @@ class Tofu(object):
         self.y = 0
         self.boxRadiusWidth = self.width//2
         self.boxRadiusLength = self.height//2
+        self.counter = 0
 
     def sliced(self, x0, y0): 
         #top left corner
