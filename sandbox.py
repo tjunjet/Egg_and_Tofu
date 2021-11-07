@@ -247,10 +247,12 @@ def gameMode_redrawAll(app, canvas):
     drawEgg(app, canvas)
     drawTofu(app, canvas)
     drawBrokenEgg(app,canvas)
+    drawInstructions(app, canvas)
     for i in range(len(app.cursorQueue) - 1):
         canvas.create_line(*app.cursorQueue[i], *app.cursorQueue[i + 1], width = 10)
     canvas.create_text(app.width//2, app.height * 0.75, text = f"FPS: {round(app.fpsmeter.getFPS())}")
     canvas.create_text(app.width//2, app.height//10, font = "Arial 20", text = f"SCORE: {app.score}     COMBO: {app.combo}     HITS: {app.percentage}%")
+
 
 # --------------------
 # DRAWING
@@ -285,15 +287,21 @@ def drawTofu(app, canvas):
         for tofu in app.tofus:
             canvas.create_image(tofu.x, tofu.y, image=ImageTk.PhotoImage(app.image2_scale))
 
+def drawInstructions(app, canvas):
+    lineHeight = 22
+    canvas.create_text(app.width//2, lineHeight*2, font = "Arial 15", text = "Slice eggs and tofu with your smartphone flashlight!")
+    canvas.create_text(app.width//2, lineHeight*3, font = "Arial 15", text="Eggs = 10 points; Tofu = 50 points")
+
 # --------------------
 # CONTROLLER
 # --------------------
 
 def keyPressed(app, event):
-    print(event.key)
     if (event.key == 's'):
         app.sound.start()
         print("YAY")
+    elif (event.key == "r"):
+        appStarted(app)
 
 
 runApp(width = WIDTH, height = HEIGHT)
