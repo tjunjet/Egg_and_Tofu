@@ -169,6 +169,7 @@ def graphicsparams(app):
     ###########################################################
     #https://www.deviantart.com/jaywlng/art/Tofu-301528003
     app.background = app.loadImage(r"Image/Background.png")
+    app.background_trans = app.background.transpose(Image.FLIP_LEFT_RIGHT)
     ###########################################################
     #https://www.pngkey.com/maxpic/u2e6y3i1q8r5u2e6/
     #broken egg
@@ -183,12 +184,13 @@ def graphicsparams(app):
     app.timeElapsed = 0
     app.startTime = time.time()
     app.combo = 0
-
     app.eggs = []
+
     #list of tuples containing x,y coordinate of broken egg
     app.brokeneggs = []
     app.tofus = []
     app.counter = 0
+    app.backBool = True
 
 def soundParams(app):
     pygame.mixer.init()
@@ -223,6 +225,7 @@ def gameMode_timerFired(app):
         app.counter += 1
         app.startTime = newTime
         app.isFlashing = True
+        app.backBool = not app.backBool
     else:
         app.isFlashing = False
     app.percentage = round(100 * app.hits/app.counter)
@@ -259,10 +262,13 @@ def drawGameOver(app, canvas):
     canvas.create_text(app.width//2, app.height * 0.75, text = f"Percentage hit: {round(100 * app.hits/app.counter)}%", font = "Arial 60")
 
 def drawBackground(app, canvas):
-    if app.isFlashing == False:
+    #if app.isFlashing == False:
+    if app.backBool == True:
         canvas.create_image(app.width/2, app.height/2, image=ImageTk.PhotoImage(app.background))
-    else:
-        canvas.create_rectangle(0, 0, app.width, app.height, fill = "white")
+    elif app.backBool == False:
+        canvas.create_image(app.width/2, app.height/2, image=ImageTk.PhotoImage(app.background_trans))
+    #else:
+        #canvas.create_rectangle(0, 0, app.width, app.height, fill = "white")
 
 def drawBrokenEgg(app,canvas):
     if app.brokeneggs != []:
