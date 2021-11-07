@@ -163,7 +163,14 @@ def appStarted(app):
     app.percentage = 0
     app.isFlashing = False
 
-    app.randomchoice = random.randint(0,2)
+    app.userinput = input('''
+    Enter 0 or 1 or 2 to choose your song:
+
+    0: Stereo Madness
+    1: Moonlight Sonata
+    2: Nocturne
+
+    ''')
     soundParams(app)
     graphicsparams(app)
     
@@ -207,12 +214,15 @@ def graphicsparams(app):
 
 def soundParams(app):
     app.songs = {
+    #from https://www.youtube.com/watch?v=JhKyKEDxo8Q
     0 : "Music/Forever Bound - Stereo Madness.wav",
+    #from https://www.youtube.com/watch?v=nT7_IZPHHb0
     1 : "Music/Beethoven - Moonlight Sonata (1st Movement).wav",
-    2 : "Music/[1080P Full風] 千本桜 Senbonzakura _One Thousand Cherry Trees_- 初音ミク Hatsune Miku DIVA English Romaji.wav"
+    #from https://www.youtube.com/watch?v=9E6b3swbnWg
+    2 : 'MusicChopin - Nocturne op.9 No.2.wav'    
     }   
 
-    app.filename = app.songs[app.randomchoice]
+    app.filename = app.songs[int(app.userinput)]
     pygame.mixer.init()
     app.sound = sound.Sound(app.filename)
     app.sound.start()
