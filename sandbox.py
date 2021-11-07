@@ -59,15 +59,21 @@ def changeSlice(app):
             p2 = shapes.Point(*app.cursorQueue[i+1])
             for egg in app.eggs:
                 egg.sliced(p1, p2)
+            for tofu in app.tofus:
+                tofu.sliced(p1,p2)
 
 def createEgg(app):
-    pass
     egg1 = shapes.RedEgg('Image/Egg.png', app.image1_width, app.image1_height)
     app.eggs.append(egg1)
+
+def createTofu(app):
+    tofu1 = shapes.RedEgg('Image/Egg.png', app.image2_width, app.image2_height)
+    app.tofus.append(tofu1)
 
 def moveEgg(app):
     for egg in app.eggs:
         egg.y += 10
+
 
 def removeEgg(app):
     for egg in app.eggs:
@@ -106,6 +112,8 @@ def graphicsparams(app):
     ###########################################################
     ###########################################################
     app.image2 = app.loadImage(r"Image/Tofu.png")
+    app.image2_scale = app.scaleImage(app.image2, 2/9)
+    app.image2_width, app.image2_height = app.image2_scale.size
     ###########################################################
     ###########################################################
     #https://www.deviantart.com/jaywlng/art/Tofu-301528003
@@ -139,6 +147,7 @@ def gameMode_timerFired(app):
     # app.timeElapsed += app.timerDelay
     if timePassed > app.period:
         createEgg(app)
+        createTofu(app)
         app.startTime = newTime
     moveEgg(app)
     changeSlice(app)
@@ -165,6 +174,8 @@ def drawEgg(app, canvas):
             canvas.create_image(egg.x, egg.y, image=ImageTk.PhotoImage(app.image1_scale))
     
 def drawTofu(app, canvas):
-    canvas.create_image(app.width//2, app.height//2, image=ImageTk.PhotoImage(app.image2))
+    if app.tofus != []:
+        for tofu in app.tofus:
+            canvas.create_image(tofu.x, tofu.y, image=ImageTk.PhotoImage(app.image2_scale))
 
 runApp(width = WIDTH, height = HEIGHT)
