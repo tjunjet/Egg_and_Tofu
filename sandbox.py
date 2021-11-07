@@ -185,7 +185,7 @@ def graphicsparams(app):
     app.brokenegg_scale = app.scaleImage(app.brokenegg, 2/9)
     ###########################################################
     #broken tofu
-    app.brokentofu = app.loadImage(r"Image/slicedtofu.png")
+    app.brokentofu = app.loadImage(r"Image/brokentofu.png")
     app.brokentofu_scale = app.scaleImage(app.brokentofu, 2/9)
     ###########################################################
 
