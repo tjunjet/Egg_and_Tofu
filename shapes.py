@@ -21,7 +21,7 @@ class Egg(object):
     #x0 and y0 are classes of points on the point class from opencv
     def sliced(self, x0, y0): 
         #top left corner
-        top_left = Point(self.x - self.boxRadiusWidth, self.y- self.boxRadiusLength)
+        top_left = Point(self.x - self.boxRadiusWidth, self.y - self.boxRadiusLength)
         #top right corner
         top_right = Point(self.x + self.boxRadiusWidth, self.y - self.boxRadiusLength)
         #bot left
@@ -31,7 +31,7 @@ class Egg(object):
         if doIntersect(top_left, top_right, x0, y0):
             self.slice = True
         if doIntersect(top_left, bot_left, x0, y0):
-            self.slice =  True
+            self.slice = True
         if doIntersect(top_right, bot_right, x0, y0):
             self.slice = True
         if doIntersect(bot_left, bot_right, x0, y0):

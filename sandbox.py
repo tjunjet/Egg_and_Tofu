@@ -77,18 +77,45 @@ def graphicsparams(app):
     app.timerDelay = 1
     app.timeElapsed = 0
     app.startTime = time.time()
+
     app.eggs = []
     app.tofus = []
     app.counter = 0
 
 
 def changeSlice(app):
-    p1 = shapes.Point(*app.cursorQueue[-2])
-    p2 = shapes.Point(*app.cursorQueue[-1])
-    for egg in app.egg:
-        egg.sliced(p1,p2)
+    if len(app.cursorQueue) > 1:
+        for i in range(len(app.cursorQueue)-1):
+            p1 = shapes.Point(*app.cursorQueue[i])
+            p2 = shapes.Point(*app.cursorQueue[i+1])
+            for egg in app.eggs:
+                egg.sliced(p1, p2)
 
 
+def drawbox(app,canvas):
+    canvas.create_rectangle(100,100,200,200)
+
+
+def checkcut(app):
+    p1 = shapes.Point(100,100)
+    p2 = shapes.Point(100,200)
+    p3 = shapes.Point(200,200)
+    p4 = shapes.Point(200,100)
+    return p1,p2,p3,p4
+
+def checkint(app):
+    p1,p2,p3,p4 = checkcut(app)
+    for i in range(len(app.cursorQueue)-1):
+        q1 = shapes.Point(*app.cursorQueue[i])
+        q2 = shapes.Point(*app.cursorQueue[i+1])
+        if shapes.doIntersect(p1,p2,q1,q2):
+            print('YAY')
+        if shapes.doIntersect(p3,p4,q1,q2):
+            print('YAY')
+        if shapes.doIntersect(p2,p3,q1,q2):
+            print('YAY')
+        if shapes.doIntersect(p3,p4,q1,q2):
+            print('YAY')
 # --------------------
 # CALIBRATION MODE
 # --------------------
@@ -111,16 +138,21 @@ def calibrationMode_redrawAll(app, canvas):
 # --------------------
 
 def createEgg(app):
+    pass
     egg1 = shapes.RedEgg('Image/Egg.png', app.image1_width, app.image1_height)
     app.eggs.append(egg1)
 
+
 def moveEgg(app):
     for egg in app.eggs:
-        egg.y += 100
+        egg.y += 1
+
+
 def removeEgg(app):
     for egg in app.eggs:
         if egg.sliced == True:
             app.eggs.remove(egg)
+
 # View
 def drawBackground(app, canvas):
     canvas.create_rectangle(0,0, app.width, app.height, fill = 'red')
@@ -136,6 +168,7 @@ def drawTofu(app, canvas):
 def redrawAll(app, canvas):
     drawBackground(app, canvas)
     drawEgg(app, canvas)
+    drawbox(app, canvas)
     calibrationMode_redrawAll(app, canvas)
 
 
@@ -163,6 +196,8 @@ def timerFired(app):
         app.startTime = newTime
     changeSlice(app)
     removeEgg(app)
+
+    checkint(app)
     calibrationMode_timerFired(app)
 
 

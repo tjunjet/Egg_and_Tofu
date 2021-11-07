@@ -21,14 +21,16 @@ def appStarted(app):
     # Time interval between successive item drops
     app.timerDelay = int((60 / app.bpm) * 1000)
     app.timeElapsed = 0
-    app.eggs = []
+
+    app.egg1 = shapes.RedEgg('Image/Egg.png', app.image1_width, app.image1_height)
+    app.eggs = [app.egg1]
     app.tofus = []
     app.counter = 0
 
 def createEgg(app):
-    egg1 = shapes.RedEgg('Image/Egg.png', app.image1_width, app.image1_height)
-    app.eggs.append(egg1)
-
+    #egg1 = shapes.RedEgg('Image/Egg.png', app.image1_width, app.image1_height)
+    #app.eggs.append(egg1)
+    pass
 def moveEgg(app):
     for egg in app.eggs:
         egg.y += 100
@@ -72,8 +74,8 @@ def timerFired(app):
     # timePassed = newTime - app.startTime
     app.timerDelay
     app.timeElapsed += app.timerDelay
-    createEgg(app)
-    moveEgg(app)
+    #createEgg(app)
+    #moveEgg(app)
     removeEgg(app)
     # if (app.timeElapsed // app.timerDelay) % 2 == 0:
     #     addEgg(app)
