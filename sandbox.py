@@ -93,6 +93,12 @@ def moveBrokenEgg(app):
         if broken[1] >= app.height:
             app.brokeneggs.remove(broken)
 
+def moveBrokenTofu(app):
+    for broken in app.brokentofus:
+        broken[1] += TOFU_SPEED*5
+        if broken[1] >= app.height:
+            app.brokentofus.remove(broken)
+
 def removeEgg(app):
     i = 0
     while i < len(app.eggs):
@@ -114,10 +120,12 @@ def removeTofu(app):
     i = 0
     while i < len(app.tofus):
         if app.tofus[i].y >= app.height:
+            app.brokentofus.append([app.tofus[i].x, app.tofus[i].y])
             app.tofus.pop(i)
             app.lives -= 1
             app.combo = 0
         elif app.tofus[i].slice == True:
+            app.brokentofus.append([app.tofus[i].x, app.tofus[i].y])
             app.score += app.tofus[i].points
             app.tofus.pop(i)
             app.hits += 1
@@ -176,6 +184,11 @@ def graphicsparams(app):
     app.brokenegg = app.loadImage(r"Image/brokenegg.png")
     app.brokenegg_scale = app.scaleImage(app.brokenegg, 2/9)
     ###########################################################
+    #broken tofu
+    app.brokentofu = app.loadImage(r"Image/slicedtofu.png")
+    app.brokentofu_scale = app.scaleImage(app.brokentofu, 2/9)
+    ###########################################################
+
     app.filename = "Music/Forever Bound - Stereo Madness.wav"
     app.bpm = getBPM(app, app.filename)
     # Time interval between successive item drops
@@ -186,9 +199,12 @@ def graphicsparams(app):
     app.combo = 0
     app.eggs = []
 
-    #list of tuples containing x,y coordinate of broken egg
+    #list of list containing x,y coordinate of broken egg
     app.brokeneggs = []
+
     app.tofus = []
+    #list of list containing x,y coord of broken tofu
+    app.brokentofus = []
     app.counter = 0
     app.backBool = True
 
@@ -235,6 +251,7 @@ def gameMode_timerFired(app):
     removeEgg(app)
     removeTofu(app)
     moveBrokenEgg(app)
+    moveBrokenTofu(app)
     if app.sound.isPlaying() == False:
         app.isGameOver = True
 
@@ -247,6 +264,7 @@ def gameMode_redrawAll(app, canvas):
     drawEgg(app, canvas)
     drawTofu(app, canvas)
     drawBrokenEgg(app,canvas)
+    drawBrokenTofu(app,canvas)
     drawInstructions(app, canvas)
     for i in range(len(app.cursorQueue) - 1):
         canvas.create_line(*app.cursorQueue[i], *app.cursorQueue[i + 1], width = 10)
@@ -271,6 +289,11 @@ def drawBackground(app, canvas):
         canvas.create_image(app.width/2, app.height/2, image=ImageTk.PhotoImage(app.background_trans))
     #else:
         #canvas.create_rectangle(0, 0, app.width, app.height, fill = "white")
+
+def drawBrokenTofu(app,canvas):
+    if app.brokentofus != []:
+        for x, y in app.brokentofus:
+            canvas.create_image(x, y, image=ImageTk.PhotoImage(app.brokentofu_scale))
 
 def drawBrokenEgg(app,canvas):
     if app.brokeneggs != []:
