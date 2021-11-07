@@ -150,7 +150,7 @@ def moveEgg(app):
 
 def removeEgg(app):
     for egg in app.eggs:
-        if egg.sliced == True:
+        if egg.slice == True:
             app.eggs.remove(egg)
 
 # View
