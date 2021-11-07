@@ -32,7 +32,10 @@ def createEgg(app):
 def moveEgg(app):
     for egg in app.eggs:
         egg.y += 100
-
+def removeEgg(app):
+    for egg in app.eggs:
+        if egg.sliced == True:
+            app.eggs.remove(egg)
 # View
 def drawBackground(app, canvas):
     canvas.create_rectangle(0,0, app.width, app.height, fill = 'red')
@@ -72,6 +75,7 @@ def timerFired(app):
     app.timeElapsed += app.timerDelay
     createEgg(app)
     moveEgg(app)
+    removeEgg(app)
     # if (app.timeElapsed // app.timerDelay) % 2 == 0:
     #     addEgg(app)
     # else:
