@@ -62,8 +62,7 @@ def redrawAll(app, canvas):
     # if len(app.eggs) == 0:
     #     app.eggs.append((x,y))
 
-def removeEgg(app):
-    app.eggs = []
+
 
 def getBPM(app, filename):
     return bpm_detection.main(app.filename)

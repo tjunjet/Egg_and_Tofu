@@ -52,7 +52,6 @@ def convertPoint(app, inputX, inputY):
 # --------------------
 
 def appStarted(app):
-    app.mode = "calibrationMode"
     app.calibrationRectangle = CALIBRATION_RECTANGLE_TEMP
     app.cursor = (0, 0)
     app.cursorQueue = []
@@ -74,8 +73,10 @@ def graphicsparams(app):
     app.filename = "Music/Forever Bound - Stereo Madness.wav"
     app.bpm = getBPM(app, app.filename)
     # Time interval between successive item drops
-    app.timerDelay = int((60 / app.bpm) * 1000)
+    app.period = (60 / app.bpm)
+    app.timerDelay = 1
     app.timeElapsed = 0
+    app.startTime = time.time()
     app.eggs = []
     app.tofus = []
     app.counter = 0
@@ -127,6 +128,7 @@ def drawTofu(app, canvas):
 def redrawAll(app, canvas):
     drawBackground(app, canvas)
     drawEgg(app, canvas)
+    calibrationMode_redrawAll(app, canvas)
 
 
 
@@ -138,20 +140,23 @@ def redrawAll(app, canvas):
     # if len(app.eggs) == 0:
     #     app.eggs.append((x,y))
 
-def removeEgg(app):
-    app.eggs = []
 
 def getBPM(app, filename):
     return bpm_detection.main(app.filename)
 
 def timerFired(app):
-    # newTime = time.time()
-    # timePassed = newTime - app.startTime
-    app.timerDelay
-    app.timeElapsed += app.timerDelay
-    createEgg(app)
-    moveEgg(app)
+    newTime = time.time()
+    timePassed = newTime - app.startTime
+    # app.timerDelay
+    # app.timeElapsed += app.timerDelay
+    if timePassed > app.period:
+        createEgg(app)
+        moveEgg(app)
+        app.startTime = newTime
     removeEgg(app)
+    calibrationMode_timerFired(app)
+
+
     # if (app.timeElapsed // app.timerDelay) % 2 == 0:
     #     addEgg(app)
     # else:

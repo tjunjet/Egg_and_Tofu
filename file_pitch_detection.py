@@ -30,4 +30,4 @@ while True:
     if read < hop_s: break
 
 print(pitches)
-# print("Average frequency = " + str(np.array(pitches).mean()) + " hz")
+# print("Average period = " + str(np.array(pitches).mean()) + " hz")
