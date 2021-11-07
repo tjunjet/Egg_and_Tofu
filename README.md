@@ -29,4 +29,5 @@ Play this game in a room with dim light conditions or a dark background.
 A phone with flashlight is required for the user to interact with the game.
 A laptop with a webcam is also required.
 To start the program, run main.py
+Follow the instructions in the console to select a song before starting the game.
 
