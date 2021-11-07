@@ -137,7 +137,7 @@ def graphicsparams(app):
     ###########################################################
     ###########################################################
     app.image2 = app.loadImage(r"Image/Tofu.png")
-    app.image2_scale = app.scaleImage(app.image2, 2/9)
+    app.image2_scale = app.scaleImage(app.image2, 4/9)
     app.image2_width, app.image2_height = app.image2_scale.size
     ###########################################################
     ###########################################################
