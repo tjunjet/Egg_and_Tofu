@@ -80,7 +80,6 @@ def graphicsparams(app):
     app.eggs = []
     app.tofus = []
     app.counter = 0
-    app.cursorPoints = []
 
 
 def changeSlice(app):
