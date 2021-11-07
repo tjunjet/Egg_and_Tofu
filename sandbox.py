@@ -163,14 +163,7 @@ def appStarted(app):
     app.percentage = 0
     app.isFlashing = False
 
-    app.userinput = input('''
-    Enter 0 or 1 or 2 to choose your song:
 
-    0: Stereo Madness
-    1: Moonlight Sonata
-    2: Nocturne
-
-    ''')
     soundParams(app)
     graphicsparams(app)
     
@@ -212,27 +205,30 @@ def graphicsparams(app):
     app.counter = 0
     app.backBool = True
 
-
-def checkLegalInput(input):
-    try:
-        x = int(input)
-        if 0 <= x <= 2:
-            return True
-    except:
-        return False
-
 def returninput(app):
-    while checkLegalInput(app.userinput) == False:
-        app.userinput = input('''
-        Enter 0 or 1 or 2 to choose your song:
+    while True:
+        try:
+            app.userinput = input('''
+            Enter 0 or 1 or 2 to choose your song:
 
-        0: Stereo Madness
-        1: Moonlight Sonata
-        2: Nocturne
+            0: Stereo Madness
+            1: Moonlight Sonata
+            2: Nocturne
 
-        ''')
-    else:
-        return int(app.userinput)
+            ''')
+            x = int(app.userinput)
+            if 0 <= x <= len(app.songs) - 1:
+                return x
+        except:
+            print("INVALID INPUT!!!!")
+            continue
+
+
+# def returninput(app):
+#     while checkLegalInput(app.userinput) == False:
+
+#     else:
+#         return int(app.userinput)
 
 def soundParams(app):
     app.songs = {
@@ -241,7 +237,7 @@ def soundParams(app):
     #from https://www.youtube.com/watch?v=nT7_IZPHHb0
     1 : "Music/Beethoven - Moonlight Sonata (1st Movement).wav",
     #from https://www.youtube.com/watch?v=9E6b3swbnWg
-    2 : 'MusicChopin - Nocturne op.9 No.2.wav'    
+    2 : 'Music/Chopin - Nocturne op.9 No.2.wav'
     }   
     app.filename = app.songs[returninput(app)]
     pygame.mixer.init()
@@ -286,7 +282,10 @@ def gameMode_timerFired(app):
         app.backBool = not app.backBool
     else:
         app.isFlashing = False
-    app.percentage = round(100 * app.hits/app.counter)
+    try:
+        app.percentage = round(100 * app.hits/app.counter)
+    except:
+        pass
     moveEgg(app)
     moveTofu(app)
     changeSlice(app)

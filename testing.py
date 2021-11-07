@@ -22,7 +22,7 @@ def appStarted(app):
     app.timerDelay = int((60 / app.bpm) * 1000)
     app.timeElapsed = 0
 
-    app.egg1 = shapes.RedEgg('Image/Egg.png', app.image1_width, app.image1_height)
+    app.egg1 =() shapes.RedEgg('Image/Egg.png', app.image1_width, app.image1_height)
     app.eggs = [app.egg1]
     app.tofus = []
     app.counter = 0
