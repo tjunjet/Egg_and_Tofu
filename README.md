@@ -25,9 +25,14 @@ Eggs and tofus are raining from the sky! These food are generated according to t
 * The foods are being represented by bounding boxes consisting of 4 line segments. When the slicing path of the user intersects with any of the line segments bounding the foods, the food would be considered as sliced by the user.
 
 ## Instructions for running
+
 Play this game in a room with dim light conditions or a dark background. 
+
 A phone with flashlight is required for the user to interact with the game.
+
 A laptop with a webcam is also required.
-To start the program, run main.py
-Follow the instructions in the console to select a song before starting the game.
+
+**To start the program, run main.py**
+
+**Follow the instructions in the console to select a song before starting the game.**
 
