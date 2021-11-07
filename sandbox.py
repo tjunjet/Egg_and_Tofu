@@ -3,6 +3,7 @@ HEIGHT = 1000
 CURSOR_LIST_LENGTH = 10
 CURSOR_RA_NUM = 5
 CALIBRATION_RECTANGLE_TEMP = [0, 640, 0, 480] # TEMP
+EGG_SPEED = 8
 
 from cmu_112_graphics import *
 import videoInput as vi
@@ -72,15 +73,15 @@ def createTofu(app):
 
 def moveEgg(app):
     for egg in app.eggs:
-        egg.y += 10
-
+        egg.y += EGG_SPEED
 
 def removeEgg(app):
-    for egg in app.eggs:
-        if egg.slice == True:
-            app.eggs.remove(egg)
-        if egg.y >= app.height:
-            app.eggs.remove(egg)
+    i = 0
+    while i < len(app.eggs):
+        if app.eggs[i].y > app.height or app.eggs[i].slice == True:
+            app.eggs.pop(i)
+        else:
+            i += 1
 
 # --------------------
 # MUSIC PROCESSING FUNCTIONS
