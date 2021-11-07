@@ -7,7 +7,7 @@ Eggs and tofus are raining from the sky! These food are generated according to t
 * PyWavelets
 * Scipy
 * Numpy
-* MatplotLib
+* Matplotlib
 * Argparse
 
 # Instructions for running
