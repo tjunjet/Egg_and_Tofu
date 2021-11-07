@@ -9,8 +9,12 @@ import time
 
 # Model
 def appStarted(app):
+    #testing image for egg
     app.image1 = app.loadImage(r"Image/Egg.png")
     app.image1_scale = app.scaleImage(app.image1, 2/9)
+    app.image1_width, app.image1_height = app.image1_scale.size
+    ##############
+
     app.image2 = app.loadImage(r"Image/Tofu.png")
     app.filename = "Music/Forever Bound - Stereo Madness.wav"
     app.bpm = getBPM(app, app.filename)
@@ -22,7 +26,7 @@ def appStarted(app):
     app.counter = 0
 
 def createEgg(app):
-    egg1 = shapes.RedEgg('Image/Egg.png')
+    egg1 = shapes.RedEgg('Image/Egg.png', app.image1_width, app.image1_height)
     app.eggs.append(egg1)
 
 def moveEgg(app):
