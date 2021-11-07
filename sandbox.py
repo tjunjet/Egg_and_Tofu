@@ -10,6 +10,10 @@ import fpsmeter
 import cv2 as cv
 import statistics, bpm_detection, shapes, time
 
+# --------------------
+# OPENCV FUNCTIONS
+# --------------------
+
 # Version 2: Use running average
 def updateCursor(app):
     # Get data from videoInput
@@ -45,10 +49,44 @@ def convertPoint(app, inputX, inputY):
     return x, y
 
 # --------------------
+# EGG & TOFU FUNCTIONS
+# --------------------
+
+def changeSlice(app):
+    if len(app.cursorQueue) > 1:
+        for i in range(len(app.cursorQueue)-1):
+            p1 = shapes.Point(*app.cursorQueue[i])
+            p2 = shapes.Point(*app.cursorQueue[i+1])
+            for egg in app.eggs:
+                egg.sliced(p1, p2)
+
+def createEgg(app):
+    pass
+    egg1 = shapes.RedEgg('Image/Egg.png', app.image1_width, app.image1_height)
+    app.eggs.append(egg1)
+
+def moveEgg(app):
+    for egg in app.eggs:
+        egg.y += 10
+
+def removeEgg(app):
+    for egg in app.eggs:
+        if egg.slice == True:
+            app.eggs.remove(egg)
+
+# --------------------
+# MUSIC PROCESSING FUNCTIONS
+# --------------------
+
+def getBPM(app, filename):
+    return bpm_detection.main(app.filename)
+
+# --------------------
 # APP STARTED
 # --------------------
 
 def appStarted(app):
+    app.mode = "gameMode"
     app.calibrationRectangle = CALIBRATION_RECTANGLE_TEMP
     app.cursor = (0, 0)
     app.cursorQueue = []
@@ -57,7 +95,6 @@ def appStarted(app):
     app.cap = cv.VideoCapture(0)
     app.fpsmeter = fpsmeter.FPSmeter()
     graphicsparams(app)
-
 
 def graphicsparams(app):
     app.image1 = app.loadImage(r"Image/Egg.png")
@@ -78,105 +115,16 @@ def graphicsparams(app):
     app.tofus = []
     app.counter = 0
 
-
-
-
-#######################################
-# def drawbox(app,canvas):
-#     canvas.create_rectangle(100,100,200,200)
-
-
-# def checkcut(app):
-#     p1 = shapes.Point(100,100)
-#     p2 = shapes.Point(100,200)
-#     p3 = shapes.Point(200,200)
-#     p4 = shapes.Point(200,100)
-#     return p1,p2,p3,p4
-
-# def checkint(app):
-#     p1,p2,p3,p4 = checkcut(app)
-#     for i in range(len(app.cursorQueue)-1):
-#         q1 = shapes.Point(*app.cursorQueue[i])
-#         q2 = shapes.Point(*app.cursorQueue[i+1])
-#         if shapes.doIntersect(p1,p2,q1,q2):
-#             print('YAY')
-#         if shapes.doIntersect(p3,p4,q1,q2):
-#             print('YAY')
-#         if shapes.doIntersect(p2,p3,q1,q2):
-#             print('YAY')
-#         if shapes.doIntersect(p3,p4,q1,q2):
-#             print('YAY')
-##############################################
-
-
 # --------------------
-# CALIBRATION MODE
+# GAME MODE
 # --------------------
 
-def calibrationMode_timerFired(app):
+def gameMode_timerFired(app):
     updateCursor(app)
 
     print(app.cursorCount, app.cursorQueue)
     app.fpsmeter.addFrame()
 
-def calibrationMode_redrawAll(app, canvas):
-    canvas.create_text(app.width//2, app.height//2, text = "Calibration Mode")
-    # canvas.create_oval(app.cursor[0] - 5, app.cursor[1] - 5, app.cursor[0] + 5, app.cursor[1] + 5, fill = "red")
-    for i in range(len(app.cursorQueue) - 1):
-        canvas.create_line(*app.cursorQueue[i], *app.cursorQueue[i + 1], width = 10)
-    canvas.create_text(app.width//2, app.height * 0.75, text = f"FPS: {round(app.fpsmeter.getFPS())}")
-
-# --------------------
-# GAME MODE
-# --------------------
-
-def changeSlice(app):
-    if len(app.cursorQueue) > 1:
-        for i in range(len(app.cursorQueue)-1):
-            p1 = shapes.Point(*app.cursorQueue[i])
-            p2 = shapes.Point(*app.cursorQueue[i+1])
-            for egg in app.eggs:
-                egg.sliced(p1, p2)
-
-def createEgg(app):
-    pass
-    egg1 = shapes.RedEgg('Image/Egg.png', app.image1_width, app.image1_height)
-    app.eggs.append(egg1)
-
-
-def moveEgg(app):
-    for egg in app.eggs:
-        egg.y += 10
-
-
-def removeEgg(app):
-    for egg in app.eggs:
-        if egg.slice == True:
-            app.eggs.remove(egg)
-
-# View
-def drawBackground(app, canvas):
-    canvas.create_rectangle(0,0, app.width, app.height, fill = 'red')
-
-def drawEgg(app, canvas):
-    if app.eggs != []:
-        for egg in app.eggs:
-            canvas.create_image(egg.x, egg.y, image=ImageTk.PhotoImage(app.image1_scale))
-    
-def drawTofu(app, canvas):
-    canvas.create_image(app.width//2, app.height//2, image=ImageTk.PhotoImage(app.image2))
-
-def redrawAll(app, canvas):
-    drawBackground(app, canvas)
-    drawEgg(app, canvas)
-    #drawbox(app, canvas)
-    calibrationMode_redrawAll(app, canvas)
-
-
-def getBPM(app, filename):
-    return bpm_detection.main(app.filename)
-
-def timerFired(app):
     newTime = time.time()
     timePassed = newTime - app.startTime
     # app.timerDelay
@@ -188,13 +136,27 @@ def timerFired(app):
     changeSlice(app)
     removeEgg(app)
 
-    #checkint(app)
-    calibrationMode_timerFired(app)
+def gameMode_redrawAll(app, canvas):
+    canvas.create_text(app.width//2, app.height//2, text = "Calibration Mode")
+    drawBackground(app, canvas)
+    drawEgg(app, canvas)
+    for i in range(len(app.cursorQueue) - 1):
+        canvas.create_line(*app.cursorQueue[i], *app.cursorQueue[i + 1], width = 10)
+    canvas.create_text(app.width//2, app.height * 0.75, text = f"FPS: {round(app.fpsmeter.getFPS())}")
 
+# --------------------
+# DRAWING
+# --------------------
 
-    # if (app.timeElapsed // app.timerDelay) % 2 == 0:
-    #     addEgg(app)
-    # else:
-    #     removeEgg(app)
+def drawBackground(app, canvas):
+    canvas.create_rectangle(0,0, app.width, app.height, fill = 'red')
+
+def drawEgg(app, canvas):
+    if app.eggs != []:
+        for egg in app.eggs:
+            canvas.create_image(egg.x, egg.y, image=ImageTk.PhotoImage(app.image1_scale))
+    
+def drawTofu(app, canvas):
+    canvas.create_image(app.width//2, app.height//2, image=ImageTk.PhotoImage(app.image2))
 
 runApp(width = WIDTH, height = HEIGHT)
