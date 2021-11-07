@@ -5,6 +5,7 @@ CURSOR_RA_NUM = 5
 CALIBRATION_RECTANGLE_TEMP = [0, 640, 0, 480] # TEMP
 EGG_SPEED = 8
 TOFU_SPEED = 8
+STARTING_LIVES = 10
 
 from cmu_112_graphics import *
 import videoInput as vi
@@ -83,15 +84,24 @@ def moveEgg(app):
 def removeEgg(app):
     i = 0
     while i < len(app.eggs):
-        if app.eggs[i].y >= app.height or app.eggs[i].slice == True:
+        if app.eggs[i].y >= app.height:
             app.eggs.pop(i)
+            app.lives -= 1
+        elif app.eggs[i].slice == True:
+            app.eggs.pop(i)
+            app.score += app.eggs[i].points
         else:
             i += 1
+
 def removeTofu(app):
     i = 0
     while i < len(app.tofus):
-        if app.tofus[i].y >= app.height or app.tofus[i].slice == True:
+        if app.tofus[i].y >= app.height:
             app.tofus.pop(i)
+            app.lives -= 1
+        elif app.tofus[i].slice == True:
+            app.tofus.pop(i)
+            app.score += app.tofus[i].points
         else:
             i += 1
 
@@ -115,6 +125,8 @@ def appStarted(app):
     app.cursorCount = 0
     app.cap = cv.VideoCapture(0)
     app.fpsmeter = fpsmeter.FPSmeter()
+    app.score = 0
+    app.lives = STARTING_LIVES
     graphicsparams(app)
 
 def graphicsparams(app):
@@ -176,6 +188,7 @@ def gameMode_redrawAll(app, canvas):
     for i in range(len(app.cursorQueue) - 1):
         canvas.create_line(*app.cursorQueue[i], *app.cursorQueue[i + 1], width = 10)
     canvas.create_text(app.width//2, app.height * 0.75, text = f"FPS: {round(app.fpsmeter.getFPS())}")
+    canvas.create_text(app.width//2, app.height//10, font = "Arial 20", text = f"SCORE: {app.score}     LIVES: {app.lives}")
 
 # --------------------
 # DRAWING
