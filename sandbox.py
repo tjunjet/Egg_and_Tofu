@@ -4,6 +4,7 @@ CURSOR_LIST_LENGTH = 10
 CURSOR_RA_NUM = 5
 CALIBRATION_RECTANGLE_TEMP = [0, 640, 0, 480] # TEMP
 EGG_SPEED = 8
+TOFU_SPEED = 8
 
 from cmu_112_graphics import *
 import videoInput as vi
@@ -71,6 +72,10 @@ def createTofu(app):
     tofu1 = shapes.RedEgg('Image/Egg.png', app.image2_width, app.image2_height)
     app.tofus.append(tofu1)
 
+def moveTofu(app):
+    for tofu in app.tofus:
+        tofu.y += TOFU_SPEED
+
 def moveEgg(app):
     for egg in app.eggs:
         egg.y += EGG_SPEED
@@ -78,8 +83,15 @@ def moveEgg(app):
 def removeEgg(app):
     i = 0
     while i < len(app.eggs):
-        if app.eggs[i].y > app.height or app.eggs[i].slice == True:
+        if app.eggs[i].y >= app.height or app.eggs[i].slice == True:
             app.eggs.pop(i)
+        else:
+            i += 1
+def removeTofu(app):
+    i = 0
+    while i < len(app.tofus):
+        if app.tofus[i].y >= app.height or app.tofus[i].slice == True:
+            app.tofus.pop(i)
         else:
             i += 1
 
@@ -151,13 +163,16 @@ def gameMode_timerFired(app):
         createTofu(app)
         app.startTime = newTime
     moveEgg(app)
+    moveTofu(app)
     changeSlice(app)
     removeEgg(app)
+    removeTofu(app)
 
 def gameMode_redrawAll(app, canvas):
     canvas.create_text(app.width//2, app.height//2, text = "Calibration Mode")
     drawBackground(app, canvas)
     drawEgg(app, canvas)
+    drawTofu(app, canvas)
     for i in range(len(app.cursorQueue) - 1):
         canvas.create_line(*app.cursorQueue[i], *app.cursorQueue[i + 1], width = 10)
     canvas.create_text(app.width//2, app.height * 0.75, text = f"FPS: {round(app.fpsmeter.getFPS())}")
