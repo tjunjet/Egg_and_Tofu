@@ -1,13 +1,13 @@
 import cv2 as cv
 
-def getPoint():
+def getPoint(cap):
     # When called, return coordinates of bright point on webcam
-    cap = cv.VideoCapture(1)
     if not cap.isOpened():
         print("Cannot open camera")
         exit()
     # Capture frame-by-frame
     ret, frame = cap.read()
+    frame=cv.flip(frame,1,frame)
     # if frame is read correctly ret is True
     if ret:
         # height, width of camera screen
@@ -20,7 +20,9 @@ def getPoint():
         (minVal, maxVal, minLoc, maxLoc) = cv.minMaxLoc(gray)
         cv.circle(frame, maxLoc, 10, (255, 0, 0), 2)
         x, y = maxLoc 
-        cap.release()
+        #cv.imshow('frame', frame)
+        #cv.waitKey(5000)
+        #cv.destroyAllWindows()
         return x, y, width, height
     # Display the resulting frame
     # cv.imshow('frame', frame)
