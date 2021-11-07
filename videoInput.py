@@ -18,17 +18,12 @@ def getPoint(cap):
         # apply a Gaussian blur to the image then find the brightest region
         gray = cv.GaussianBlur(gray, (11,11), 0)
         (minVal, maxVal, minLoc, maxLoc) = cv.minMaxLoc(gray)
-        cv.circle(frame, maxLoc, 10, (255, 0, 0), 2)
-        x, y = maxLoc 
-        #cv.imshow('frame', frame)
-        #cv.waitKey(5000)
-        #cv.destroyAllWindows()
+        # cv.circle(frame, maxLoc, 10, (255, 0, 0), 2)
+        if maxVal > 180: x, y = maxLoc 
+        else: x, y = -1, -1
+        # cv.imshow('frame', frame)
+        # cv.waitKey(5000)
+        # cv.destroyAllWindows()
         return x, y, width, height
-    # Display the resulting frame
-    # cv.imshow('frame', frame)
-    # if cv.waitKey(1) == ord('q'):
-    #     break
-    # # When everything done, release the capture
-    # cv.destroyAllWindows()
-    
+        
 
