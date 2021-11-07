@@ -140,6 +140,8 @@ def removeTofu(app):
 def getBPM(app, filename):
     return bpm_detection.main(app.filename)
 
+
+
 # --------------------
 # APP STARTED
 # --------------------
@@ -160,8 +162,11 @@ def appStarted(app):
     app.hits = 0
     app.percentage = 0
     app.isFlashing = False
-    graphicsparams(app)
+
+    app.randomchoice = random.randint(0,2)
     soundParams(app)
+    graphicsparams(app)
+    
 
 def graphicsparams(app):
     ###########################################################
@@ -188,14 +193,6 @@ def graphicsparams(app):
     app.brokentofu = app.loadImage(r"Image/brokentofu.png")
     app.brokentofu_scale = app.scaleImage(app.brokentofu, 2/9)
     ###########################################################
-
-    app.filename = "Music/Forever Bound - Stereo Madness.wav"
-    app.bpm = getBPM(app, app.filename)
-    # Time interval between successive item drops
-    app.period = (60 / app.bpm)
-    app.timerDelay = 1
-    app.timeElapsed = 0
-    app.startTime = time.time()
     app.combo = 0
     app.eggs = []
 
@@ -209,9 +206,23 @@ def graphicsparams(app):
     app.backBool = True
 
 def soundParams(app):
+    app.songs = {
+    0 : "Music/Forever Bound - Stereo Madness.wav",
+    1 : "Music/Beethoven - Moonlight Sonata (1st Movement).wav",
+    2 : "Music/[1080P Full風] 千本桜 Senbonzakura _One Thousand Cherry Trees_- 初音ミク Hatsune Miku DIVA English Romaji.wav"
+    }   
+
+    app.filename = app.songs[app.randomchoice]
     pygame.mixer.init()
-    app.sound = sound.Sound("Music/Forever Bound - Stereo Madness.wav")
+    app.sound = sound.Sound(app.filename)
     app.sound.start()
+    app.bpm = getBPM(app, app.filename)
+    # Time interval between successive item drops
+    app.period = (60 / app.bpm)
+    app.timerDelay = 1
+    app.timeElapsed = 0
+    app.startTime = time.time()
+    
 
 # --------------------
 # GAME MODE
