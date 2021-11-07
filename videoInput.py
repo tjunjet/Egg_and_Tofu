@@ -2,7 +2,7 @@ import cv2 as cv
 
 def getPoint():
     # When called, return coordinates of bright point on webcam
-    cap = cv.VideoCapture(0)
+    cap = cv.VideoCapture(1)
     if not cap.isOpened():
         print("Cannot open camera")
         exit()
