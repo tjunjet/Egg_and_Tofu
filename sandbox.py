@@ -191,6 +191,10 @@ def graphicsparams(app):
     app.brokentofu = app.loadImage(r"Image/brokentofu.png")
     app.brokentofu_scale = app.scaleImage(app.brokentofu, 2/9)
     ###########################################################
+    #https://clipartpng.com/?2733,broken-egg-png-clip-art
+    app.gameoverImage = app.loadImage(r"Image/gameover.png")
+
+    
     app.combo = 0
     app.eggs = []
 
@@ -212,6 +216,7 @@ def returninput(app):
             0: Stereo Madness
             1: Moonlight Sonata (1st Movement)
             2: Nocturne op.9 No.2
+            3: Shivers (Ed Sheeran)
 
             ''')
             x = int(app.userinput)
@@ -229,8 +234,11 @@ def soundParams(app):
     #from https://www.youtube.com/watch?v=nT7_IZPHHb0
     1 : "Music/Beethoven - Moonlight Sonata (1st Movement).wav",
     #from https://www.youtube.com/watch?v=9E6b3swbnWg
-    2 : 'Music/Chopin - Nocturne op.9 No.2.wav'
+    2 : 'Music/Chopin - Nocturne op.9 No.2.wav',
+    #https://www.youtube.com/watch?v=Il0S8BoucSA
+    3: "Music/Ed Sheeran - Shivers [Official Video].wav"
     }   
+
     app.filename = app.songs[returninput(app)]
     pygame.mixer.init()
     app.sound = sound.Sound(app.filename)
@@ -313,8 +321,9 @@ def gameMode_redrawAll(app, canvas):
 # --------------------
 
 def drawGameOver(app, canvas):
-    canvas.create_rectangle(0, 0, app.width, app.height, fill = "red")
+    canvas.create_image(app.width//2, app.height//2, image=ImageTk.PhotoImage(app.gameoverImage))
     canvas.create_text(app.width//2, app.height//2, text = "Game Over", font = "Arial 50", fill = "yellow")
+    canvas.create_text(app.width//2, app.height * 0.6, text = f"Score: {app.score}", font = "Arial 60")
     canvas.create_text(app.width//2, app.height * 0.75, text = f"Percentage hit: {round(100 * app.hits/app.counter)}%", font = "Arial 60")
 
 def drawBackground(app, canvas):
