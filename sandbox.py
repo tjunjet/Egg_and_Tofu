@@ -73,6 +73,8 @@ def removeEgg(app):
     for egg in app.eggs:
         if egg.slice == True:
             app.eggs.remove(egg)
+        if egg.y >= app.height:
+            app.eggs.remove(egg)
 
 # --------------------
 # MUSIC PROCESSING FUNCTIONS
