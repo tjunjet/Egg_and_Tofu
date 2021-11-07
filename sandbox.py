@@ -146,7 +146,7 @@ def createEgg(app):
 
 def moveEgg(app):
     for egg in app.eggs:
-        egg.y += 1
+        egg.y += 10
 
 
 def removeEgg(app):
