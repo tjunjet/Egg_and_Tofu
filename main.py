@@ -157,11 +157,11 @@ def appStarted(app):
     app.fpsmeter = fpsmeter.FPSmeter()
     app.score = 0
     app.lives = STARTING_LIVES
-    app.isGameOver = False
     app.counter = 0
     app.hits = 0
     app.percentage = 0
     app.isFlashing = False
+    app.isGameOver = False
     soundParams(app)
     graphicsparams(app)
     
@@ -322,9 +322,9 @@ def gameMode_redrawAll(app, canvas):
 
 def drawGameOver(app, canvas):
     canvas.create_image(app.width//2, app.height//2, image=ImageTk.PhotoImage(app.gameoverImage))
-    canvas.create_text(app.width//2, app.height//2, text = "Game Over", font = "Arial 50", fill = "yellow")
+    canvas.create_text(app.width//2, app.height * 0.3, text = "Game Over", font = "Arial 50", fill = "black")
     canvas.create_text(app.width//2, app.height * 0.6, text = f"Score: {app.score}", font = "Arial 60")
-    canvas.create_text(app.width//2, app.height * 0.75, text = f"Percentage hit: {round(100 * app.hits/app.counter)}%", font = "Arial 60")
+    canvas.create_text(app.width//2, app.height * 0.75, text = f"Percentage hit: {round(100 * app.hits/app.counter) if app.counter != 0 else round(100 * app.hits)}%", font = "Arial 60")
 
 def drawBackground(app, canvas):
     #if app.isFlashing == False:
