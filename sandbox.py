@@ -97,12 +97,18 @@ def appStarted(app):
     graphicsparams(app)
 
 def graphicsparams(app):
+    ###########################################################
     app.image1 = app.loadImage(r"Image/Egg.png")
     app.image1_scale = app.scaleImage(app.image1, 2/9)
     app.image1_width, app.image1_height = app.image1_scale.size
-    ##############
-
+    ###########################################################
+    ###########################################################
     app.image2 = app.loadImage(r"Image/Tofu.png")
+    ###########################################################
+    ###########################################################
+    #https://www.deviantart.com/jaywlng/art/Tofu-301528003
+    app.background = app.loadImage(r"Image/Background.png")
+    ###########################################################
     app.filename = "Music/Forever Bound - Stereo Madness.wav"
     app.bpm = getBPM(app, app.filename)
     # Time interval between successive item drops
@@ -149,7 +155,7 @@ def gameMode_redrawAll(app, canvas):
 # --------------------
 
 def drawBackground(app, canvas):
-    canvas.create_rectangle(0,0, app.width, app.height, fill = 'red')
+    canvas.create_image(app.width/2, app.height/2, image=ImageTk.PhotoImage(app.background))
 
 def drawEgg(app, canvas):
     if app.eggs != []:
