@@ -8,10 +8,7 @@ from cmu_112_graphics import *
 import videoInput as vi
 import fpsmeter
 import cv2 as cv
-import statistics
-import bpm_detection
-import shapes
-import time
+import statistics, bpm_detection, shapes, time
 
 # Version 2: Use running average
 def updateCursor(app):
