@@ -12,6 +12,8 @@ import videoInput as vi
 import fpsmeter
 import cv2 as cv
 import statistics, bpm_detection, shapes, time
+import sound
+import pygame
 
 # --------------------
 # OPENCV FUNCTIONS
@@ -172,6 +174,10 @@ def graphicsparams(app):
     app.tofus = []
     app.counter = 0
 
+def soundParams(app):
+    pygame.mixer.init()
+    app.sound = sound.Sound("Music/Forever Bound - Stereo Madness.wav")
+
 # --------------------
 # GAME MODE
 # --------------------
@@ -240,5 +246,14 @@ def drawTofu(app, canvas):
     if app.tofus != []:
         for tofu in app.tofus:
             canvas.create_image(tofu.x, tofu.y, image=ImageTk.PhotoImage(app.image2_scale))
+
+# --------------------
+# CONTROLLER
+# --------------------
+
+def keyPressed(app, event):
+    if (event.key == 's'):
+        if app.sound.isPlaying(): app.sound.stop()
+        else: app.sound.start()
 
 runApp(width = WIDTH, height = HEIGHT)
