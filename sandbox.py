@@ -212,6 +212,28 @@ def graphicsparams(app):
     app.counter = 0
     app.backBool = True
 
+
+def checkLegalInput(input):
+    try:
+        x = int(input)
+        if 0 <= x <= 2:
+            return True
+    except:
+        return False
+
+def returninput(app):
+    while checkLegalInput(app.userinput) == False:
+        app.userinput = input('''
+        Enter 0 or 1 or 2 to choose your song:
+
+        0: Stereo Madness
+        1: Moonlight Sonata
+        2: Nocturne
+
+        ''')
+    else:
+        return int(app.userinput)
+
 def soundParams(app):
     app.songs = {
     #from https://www.youtube.com/watch?v=JhKyKEDxo8Q
@@ -221,8 +243,7 @@ def soundParams(app):
     #from https://www.youtube.com/watch?v=9E6b3swbnWg
     2 : 'MusicChopin - Nocturne op.9 No.2.wav'    
     }   
-
-    app.filename = app.songs[int(app.userinput)]
+    app.filename = app.songs[returninput(app)]
     pygame.mixer.init()
     app.sound = sound.Sound(app.filename)
     app.sound.start()
