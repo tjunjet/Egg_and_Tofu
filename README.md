@@ -36,3 +36,5 @@ A laptop with a webcam is also required.
 
 **Follow the instructions in the console to select a song before starting the game.**
 
+Slides: https://docs.google.com/presentation/d/1HYnDkOLn2Ad5nxEy4bc0dFJ4hosV0aYw/edit?usp=sharing&ouid=106362043619164161536&rtpof=true&sd=true
+
