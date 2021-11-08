@@ -1,8 +1,11 @@
+# From: https://www.cs.cmu.edu/~112/notes/notes-animations-part4.html
+
 from cmu_112_graphics import *
 import pygame
 
 class Sound(object):
     def __init__(self, path):
+        self.path = path
         self.path = path
         self.loops = 1
         pygame.mixer.music.load(path)
